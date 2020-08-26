@@ -1,0 +1,114 @@
+{% load static %}
+<html>
+    <head>
+        <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-app.js"></script>
+        <script src="https://www.gstatic.com/firebasejs/6.3.3/firebase-auth.js"></script>
+        <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.js" integrity="sha512-vRqhAr2wsn+/cSsyz80psBbCcqzz2GTuhGk3bq3dAyytz4J/8XwFqMjiAGFBj+WM95lHBJ9cDf87T3P8yMrY7A==" crossorigin="anonymous"></script>
+        <script src="{% static 'js/dashboard.js' %}"></script> 
+    </head>
+    <body onload="getUserDetails()">
+        <div>
+            <ul class="topnav">
+               <li>
+                   <a href="http://hsnetworld.com/">
+                        <img width="90px" style="margin-top:7px; margin-right:8px" alt="Google sign-in" 
+                            src="{% static 'assets/logo.jpg' %}" />
+                   </a>
+               </li>
+               <li>
+                   
+                </li>
+                <li onclick="logOut()" class="right">
+                    <a href="#about">Logout</a>
+                </li>
+                <li class="right">
+                    <p class="user-text" id="user-name"></p>
+                </li>
+                <li class="right">
+                    <img class="user-image" src="https://img.icons8.com/dusk/64/000000/user-location.png"/>
+                </li>
+              </ul>
+        </div>
+        <div class="container">
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.status ==  "Success" %}
+                        <div id="flash" class="alert alert-success">
+                            <strong>Success!</strong> {{ message.detail }}
+                        </div>
+                    {% else %}
+                        <div id="flash" class="alert alert-danger">
+                            <strong>Failed!</strong> {{ message.detail }}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+
+            <form enctype="multipart/form-data" action="/customer-service/submit" method="post">
+                {% csrf_token %}
+                <div class="column" style="border-bottom: 5px solid; ">
+                    <p style="padding-bottom: 10px; font-weight: bolder;">Create Job</p>
+                    <input style="display: none;"  name="job_submitted_by" id="job-owner"></input>
+                    <div class="form-elements">
+                        <label style="padding-right: 5px;">Name: </label>
+                        <input name="name" type="text" required/>
+                    </div>
+                    <div class="form-elements">
+                        <label style="padding-right: 5px;">Phone Number: </label>
+                        <input name="phone" type="text" required/>
+                    </div>
+                    <div class="form-elements">
+                        <label style="padding-right: 5px;">Aadhar Number: </label>
+                        <input name="aadhar" type="text" required/>
+                    </div>
+                    <div class="form-elements">
+                        <label style="padding-right: 5px;">EMAIL: </label>
+                        <input name="email" type="text" required/>
+                    </div>
+                    <div class="form-elements">
+                        <label style="padding-right: 5px;">Job Date: </label>
+                        <input name="job_date" type="date" required/>
+                    </div>
+                </div>
+                <div class="jobs-list">
+                    <ul>
+                        {% for court in options %}
+                            <li>
+                                <input class="jobs-items" name="checks" value="{{ court }}" type="checkbox" /   >
+                                <label class="job-items-label">{{ court }}</label>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="column" style="border-bottom: 5px solid; ">
+                    <div class="form-elements">
+                        <label style="padding-right: 5px;">Total Amount: </label>
+                        <input name="total_amount" type="number" value="0" required/>
+                    </div>
+                    <div class="form-elements">
+                        <label style="padding-right: 5px;">Advance Amount: </label>
+                        <input name="advance_amount" type="number" value="0" required/>
+                    </div>
+                    <div class="form-elements">
+                        <label style="padding-right: 5px;">Job Explain 1: </label>
+                        <textarea class="textarea" name="job_explain_1" type="textarea" ></textarea>
+                    </div>
+                    <div class="form-elements">
+                        <label style="padding-right: 5px;">Job Explain 2: </label>
+                        <textarea class="textarea" name="job_explain_2" type="textarea" ></textarea>
+                    </div>
+                </div>
+                <div class="file-upload">
+                    <label>File Upload: </label><br><br>
+                    <input class="file-upload-area" type="file" id="files" name="myfiles" multiple>
+                </div>
+                <input type="submit"/>
+            </form>
+        </div>
+    </body>
+</html>
+

@@ -1,0 +1,77 @@
+{% load static %}
+
+<html>
+    <head>
+      <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+    </head>
+    <body>
+      <table style="width:100%; margin-top: 10%; overflow-y:auto">
+          <tr>
+            <th>JOB SUBMITTED BY</th>
+            <th>TO-DO</th>
+            <th>DATE</th>
+            <th>AADHAR NO</th>
+            <th>PHONE NO</th>
+            <th>TOTAL AMOUNT</th>
+            <th>ADVANCE PAID</th>
+            <th>JOB DETAILS</th>
+            <th>JOB STATUS</th>
+            <th>ACTION</th>
+          </tr>
+          {% for job in data %}
+            {{job.job_data}}
+            <tr>
+              <td>{{job.job_data.job_submitted_by}}</td>
+              <td>
+                <ul>
+                  {% for todo in job.job_data.jobs_list %}
+                    <li>
+                      {{ todo }}
+                    </li>
+                  {% endfor %}
+                </ul>
+              </td>
+              <td>
+                {{ job.job_data.job_date }}
+              </td> 
+              <td>
+                {{ job.job_data.aadhar }}
+              </td>  
+              <td>
+                {{ job.job_data.phone }}
+              </td> 
+              <td>
+                {{ job.job_data.total_amount }}
+              </td>
+              <td>
+                {{ job.job_data.advance_amount }}
+              </td> 
+              <td>
+                <button id="myBtn">VIEW DETAILS</button>
+              </td>  
+              <td>
+                {% if job.status == 'completed' %}
+                  <p style="color:yellowgreen">
+                    {{ job.status }}
+                  </p>
+                {% endif %}
+              </td> 
+              <td>
+                <button id="myBtn">EDIT</button>
+              </td>    
+            </tr>
+          {% endfor %}
+        </table>
+        <div id="myModal" class="modal">
+          <!-- Modal content -->
+          <div class="modal-content">
+            <div class="modal-header">
+              <span class="close">&times;</span>
+              <h2>EDIT JOB</h2>
+            </div>
+          </div>
+        
+        </div>
+        <script src="{% static 'js/modal.js' %}"></script> 
+      </body>
+</html>

@@ -1,0 +1,66 @@
+.logo-container {
+    width: 50%;
+    float: right;
+    height: 80%;
+    overflow: hidden;
+    background-color:"#F8F8FF";
+    position: relative;
+    border-right-width: 1px;
+    border-color: black;
+    border-right: 1px solid;
+    border-left-color: #B5D5FF;
+    border-image: -webkit-linear-gradient(top, #fff 60%, #B5D5FF 30%) 1 repeat;
+    border-image: -webkit-linear-gradient(bottom, #fff 30%, #B5D5FF 40%) 1 repeat;
+}
+.logo-text {
+    font-size: large;
+    color: black;
+    position: absolute;
+    top: 55%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-weight: bold;
+    font-family: 'Monaco';
+}
+
+.form-elements {
+    display: inline-block;
+    top: 200px;
+}
+.form-items {
+    position: relative;
+    top: 50%;
+    left: 25%;
+    background-color: "#FFFFFF";
+}
+
+.form-container{
+    width: 50%;
+    justify-content: center;
+    height: 80%;
+}
+.animated {
+    width: 300px; 
+    height: 200px;
+    position: absolute;
+    top: 40%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+html, body {
+    height: 100%; 
+    overflow: hidden
+}
+
+.row:after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.mobile-sign-in {
+    width: 15%;
+    height: 5%;
+    background-color: "#FFFFFF";
+}
