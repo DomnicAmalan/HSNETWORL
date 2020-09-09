@@ -1,0 +1,3 @@
+options = ['AADHAR', 'COMMUNITY CERTIFICATE', 'DRIVING LICENCE', 'ENCUMBRANCE CERTIFICATE', 'FSSAI', 'GST', 'RATION', 'PAN CARD', 'INCOME CERTIFICATE', 'TNEB NEW CONNECTION', 'PASSPORT', 'PROVIDENT FUND', 'TRAFFIC POLICE FINE', 'VOTER ID', 'UDYOG AADHAR', 'UNORGANIZED WORKERS', 'VEHICLE TAX', 'TNEB', 'OBC CERTIFICATE', 'TYPING']
+
+request_params = ['name', 'phone', 'aadhar', 'email', 'total_amount', 'advance_amount', 'job_explain_1', 'job_explain_2', 'job_submitted_by']

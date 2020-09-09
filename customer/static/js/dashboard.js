@@ -1,5 +1,5 @@
 
-var config = {
+var firebaseConfig = {
   apiKey: "AIzaSyD8vfREJDT-2TIyZiWLUOTYev4EZ30ZOQ8",
   authDomain: "hsnetworld-da138.firebaseapp.com",
   databaseURL: "https://hsnetworld-da138.firebaseio.com",
@@ -10,15 +10,44 @@ var config = {
   measurementId: "G-CKLJL1YSTE"
 };
 
+// $(document).on('click','.close',function(){
+// 	$(this).parents('span').remove();
+
+// })
+
+// document.getElementById('uploadBtn').onchange = uploadOnChange;
+
+
+
+    
+// function uploadOnChange() {
+//     document.getElementById("uploadFile").value = this.value;
+//     var filename = this.value;
+//     var lastIndex = filename.lastIndexOf("\\");
+//     if (lastIndex >= 0) {
+//         filename = filename.substring(lastIndex + 1);
+//     }
+//     var files = $('#uploadBtn')[0].files;
+//     for (var i = 0; i < files.length; i++) {
+//      $("#upload_prev").append('<span>'+'<div class="filenameupload">'+files[i].name+'</div>'+'<p class="close" >X</p></span>');
+//     }
+//     document.getElementById('filename').value = filename;
+// }
+
+
 var message_ele = document.getElementById("flash");
 setTimeout(function(){ 
     message_ele.style.display = "none"; 
 }, 5000);
 function getUserDetails(){
+
     let displayName = null
     const name = sessionStorage.getItem('name')
-    if(name === 'null'){
+    if(name === null){
         const mobile = JSON.parse(sessionStorage.getItem('detailed'))
+        if(!mobile){
+          window.location.href = "http://127.0.0.1:8000/customer-service/"
+        }
         displayName = mobile.phoneNumber
         document.getElementById('job-owner').value = displayName
     }
@@ -26,11 +55,17 @@ function getUserDetails(){
         displayName = name
         document.getElementById('job-owner').value =JSON.parse(sessionStorage.getItem('detailed'))["email"]
     }
-    document.getElementById('user-name').innerText = displayName
+    if(!displayName){
+      window.location.href = "http://127.0.0.1:8000/customer-service/"
+    }
+    else{
+      document.getElementById('user-name').innerText = displayName
+    }
+
 }
 
 if (!firebase.apps.length) {
-        firebase.initializeApp(config);
+        firebase.initializeApp(firebaseConfig);
 }
 function logOut(){
     firebase.auth().signOut().then(function() {
@@ -42,7 +77,9 @@ function logOut(){
 
 
 
-      firebase.initializeApp(firebaseConfig);
+if (!firebase.apps.length) {
+  firebase.initializeApp(firebaseConfig);
+}
 
       // Create a Recaptcha verifier instance globally
       // Calls submitPhoneNumberAuth() when the captcha is verified
@@ -104,3 +141,4 @@ function logOut(){
           console.log("USER NOT LOGGED IN");
         }
       });
+        

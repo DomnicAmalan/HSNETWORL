@@ -3,8 +3,25 @@
 <html>
     <head>
       <link rel="stylesheet" href="{% static 'css/admin.css' %}">
+      <script src='https://kit.fontawesome.com/a076d05399.js'></script>
     </head>
     <body>
+      <div>
+        <form action="/customer-service/admin" method="GET">
+            <label for="status">Filter by Status</label>
+            <select name="status" id="status">
+                <option value="pending" {% if status == 'pending' %}selected{% endif %}>Pending</option>
+                <option value="inprogress" {% if status == "inprogress" %}
+                    selected
+                {% endif %}>In Progress</option>
+                <option value="completed" {% if status == "completed" %}
+                    selected
+                {% endif %}>Completed</option>
+            </select>
+            <input type="submit" name="Filter Results"></input>
+        </form> 
+      </div>
+      
       <table style="width:100%; margin-top: 10%; overflow-y:auto">
           <tr>
             <th>JOB SUBMITTED BY</th>
@@ -14,12 +31,14 @@
             <th>PHONE NO</th>
             <th>TOTAL AMOUNT</th>
             <th>ADVANCE PAID</th>
+            {% if status != 'completed' %}
+              <th>FILES</th>
+            {% endif %}
             <th>JOB DETAILS</th>
             <th>JOB STATUS</th>
             <th>ACTION</th>
           </tr>
           {% for job in data %}
-            {{job.job_data}}
             <tr>
               <td>{{job.job_data.job_submitted_by}}</td>
               <td>
@@ -45,33 +64,56 @@
               </td>
               <td>
                 {{ job.job_data.advance_amount }}
-              </td> 
+              </td>
+              {% if status != 'completed' %}
+                <td>
+                  <ul>
+                    {% for file in job.files_ref %}
+                      <li>
+                        <span>
+                          <a href='/customer-service/viewfile/{{ file.file }}' target="_blank">{{file.name}}</a>
+                          {# <a href='/customer-service/deletefile/{{ file.file }}/job/{{job.id}}'><i class='fa fa-trash' style='margin-left: 15px;font-size:15px;color:red'></i></a> #}
+                        </span>
+                      </li>
+                    {% endfor %}
+                  </ul>
+                </td>
+              {% endif %} 
               <td>
-                <button id="myBtn">VIEW DETAILS</button>
+                <button id="myBtn" class="tooltip">VIEW DETAILS
+                  <span class="tooltiptext">
+                    <p style="padding:10; margin: 10;font-size: 12;">
+                      {{ job.job_data.job_explain_1 }}
+                    </p>
+                    <p style="padding:10; margin: 10;font-size: 12;">
+                      {{ job.job_data.job_explain_1 }}
+                    </p>
+                  </span>
+                </button>
               </td>  
               <td>
+                
                 {% if job.status == 'completed' %}
                   <p style="color:yellowgreen">
+                    {{ job.status }}
+                  </p>
+                {% elif job.status == 'inprogress' %}
+                  <p style="color:yellow "    >
+                    {{ job.status }}
+                  </p>
+                {% else %}
+                  <p style="color:dodgerblue "    >
                     {{ job.status }}
                   </p>
                 {% endif %}
               </td> 
               <td>
-                <button id="myBtn">EDIT</button>
+                <a href={{ job.edit_url }}><i class='far fa-edit' style='font-size:20px;margin-right:15'></i></a>
+                <a href={{ job.delete_url }}><i class="fa fa-trash" style="font-size:20px;color:red"></i></a>
               </td>    
             </tr>
           {% endfor %}
         </table>
-        <div id="myModal" class="modal">
-          <!-- Modal content -->
-          <div class="modal-content">
-            <div class="modal-header">
-              <span class="close">&times;</span>
-              <h2>EDIT JOB</h2>
-            </div>
-          </div>
-        
-        </div>
-        <script src="{% static 'js/modal.js' %}"></script> 
       </body>
+      <script src="{% static 'js/modal.js' %}"></script> 
 </html>

@@ -8,9 +8,13 @@
         <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
         <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.6/require.js" integrity="sha512-vRqhAr2wsn+/cSsyz80psBbCcqzz2GTuhGk3bq3dAyytz4J/8XwFqMjiAGFBj+WM95lHBJ9cDf87T3P8yMrY7A==" crossorigin="anonymous"></script>
-        <script src="{% static 'js/dashboard.js' %}"></script> 
+        <script src="{% static 'js/dashboard.js' %}"></script>
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     </head>
     <body onload="getUserDetails()">
+        {% if data %}
+            {{data}}
+        {% endif %}
         <div>
             <ul class="topnav">
                <li>
@@ -36,7 +40,7 @@
         <div class="container">
             {% if messages %}
                 {% for message in messages %}
-                    {% if message.status ==  "Success" %}
+                    {% if message.status == true %}
                         <div id="flash" class="alert alert-success">
                             <strong>Success!</strong> {{ message.detail }}
                         </div>
@@ -48,67 +52,120 @@
                 {% endfor %}
             {% endif %}
 
-            <form enctype="multipart/form-data" action="/customer-service/submit" method="post">
+            <form enctype="multipart/form-data" action="{{ submit_url }}" method="post">
                 {% csrf_token %}
+                {% if id %}
+                    <label for="status">Filter by Status</label>
+                    <select name="status" id="status">
+                        <option value="pending" {% if data.status == 'pending' %}selected{% endif %}>Pending</option>
+                        <option value="inprogress" {% if data.status == "inprogress" %}
+                            selected
+                        {% endif %}>In Progress</option>
+                        <option value="completed" {% if data.status == "completed" %}
+                            selected
+                        {% endif %}>Completed</option>
+                    </select>
+                    <label style="padding-right: 5px;">Reference Number: </label>
+                    <input name="reference_number" type="text" value="{{ data.job_data.reference_number }}" />
+                {% endif %}
                 <div class="column" style="border-bottom: 5px solid; ">
                     <p style="padding-bottom: 10px; font-weight: bolder;">Create Job</p>
                     <input style="display: none;"  name="job_submitted_by" id="job-owner"></input>
                     <div class="form-elements">
                         <label style="padding-right: 5px;">Name: </label>
-                        <input name="name" type="text" required/>
+                        <input name="name" type="text" required value="{{ data.job_data.name }}" />
                     </div>
                     <div class="form-elements">
                         <label style="padding-right: 5px;">Phone Number: </label>
-                        <input name="phone" type="text" required/>
+                        <input name="phone" type="number" required value="{{ data.job_data.phone }}"/>
                     </div>
                     <div class="form-elements">
                         <label style="padding-right: 5px;">Aadhar Number: </label>
-                        <input name="aadhar" type="text" required/>
+                        <input name="aadhar" type="number" required value="{{ data.job_data.aadhar }}"/>
                     </div>
                     <div class="form-elements">
                         <label style="padding-right: 5px;">EMAIL: </label>
-                        <input name="email" type="text" required/>
+                        <input name="email" type="email" required value="{{ data.job_data.email }}"/>
                     </div>
-                    <div class="form-elements">
-                        <label style="padding-right: 5px;">Job Date: </label>
-                        <input name="job_date" type="date" required/>
-                    </div>
+                    
                 </div>
                 <div class="jobs-list">
                     <ul>
                         {% for court in options %}
-                            <li>
-                                <input class="jobs-items" name="checks" value="{{ court }}" type="checkbox" /   >
-                                <label class="job-items-label">{{ court }}</label>
-                            </li>
+                            {% if court in data.job_data.jobs_list %}
+                                <li>
+                                    <input class="jobs-items" name="checks" value="{{ court }}" type="checkbox" checked/>
+                                    <label class="job-items-label">{{ court }}</label>
+                                </li>
+                            {% else %}
+                                <li>
+                                    <input class="jobs-items" name="checks" value="{{ court }}" type="checkbox" />
+                                    <label class="job-items-label">{{ court }}</label>
+                                </li>
+                            {% endif %}
                         {% endfor %}
                     </ul>
                 </div>
                 <div class="column" style="border-bottom: 5px solid; ">
                     <div class="form-elements">
                         <label style="padding-right: 5px;">Total Amount: </label>
-                        <input name="total_amount" type="number" value="0" required/>
+                        <input name="total_amount" type="number" value="{{ data.job_data.total_amount }}" required/>
                     </div>
                     <div class="form-elements">
                         <label style="padding-right: 5px;">Advance Amount: </label>
-                        <input name="advance_amount" type="number" value="0" required/>
+                        <input name="advance_amount" type="number" value="{{ data.job_data.advance_amount }}" required/>
                     </div>
                     <div class="form-elements">
                         <label style="padding-right: 5px;">Job Explain 1: </label>
-                        <textarea class="textarea" name="job_explain_1" type="textarea" ></textarea>
+                        <textarea class="textarea" name="job_explain_1" type="textarea" value="{{ data.job_data.job_explain_1 }}"></textarea>
                     </div>
                     <div class="form-elements">
                         <label style="padding-right: 5px;">Job Explain 2: </label>
-                        <textarea class="textarea" name="job_explain_2" type="textarea" ></textarea>
+                        <textarea class="textarea" name="job_explain_2" type="textarea" value="{{ data.job_data.job_explain_2 }}"></textarea>
                     </div>
                 </div>
-                <div class="file-upload">
-                    <label>File Upload: </label><br><br>
-                    <input class="file-upload-area" type="file" id="files" name="myfiles" multiple>
-                </div>
+                    <div class="file-upload">
+                        <input id="files" style="padding-bottom: 10px;" multiple="multiple" name="myfiles" type="file" />    
+                        <output id="upload_prev"></output>
+                    </div>
                 <input type="submit"/>
             </form>
         </div>
     </body>
+    <script>
+        function deleteFile(i){
+            console.log(i)
+        }
+        function handleFileSelect(event) {
+            //Check File API support
+            if (window.File && window.FileList && window.FileReader) {
+
+                var files = event.target.files; //FileList object
+                var output = document.getElementById("upload_prev");
+                output.innerHTML = "";
+
+                for (var i = 0; i < files.length; i++) {
+                    var file = files[i];
+                    //Only pics
+                    if (!file.type.match('image')) continue;
+
+                    var picReader = new FileReader();
+                    picReader.addEventListener("load", function (event) {
+                        var picFile = event.target;
+                        var div = document.createElement("div");
+                        div.id = "img_container"
+                        div.innerHTML = "<img class='thumbnail' src='" + picFile.result + "'" + "title='" + file.name + "'/>";
+                        output.insertBefore(div, null);
+                    });
+                    //Read the image
+                    picReader.readAsDataURL(file);
+                }
+            } else {
+                console.log("Your browser does not support File API");
+            }
+        }
+        document.getElementById('files').value = "";
+        document.getElementById('files').addEventListener('change', handleFileSelect, false);
+    </script>
 </html>
 

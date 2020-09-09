@@ -34,7 +34,6 @@ ul.topnav li.right {
     width: 44px;
 }
 .container { 
-    /* white-space: nowrap;  */
     width: 100%;
 }
 .column { 
@@ -59,13 +58,13 @@ ul.topnav li.right {
 }
 .jobs-list{
     width: auto;
-    height: 20%;
-    border-bottom: 1px solid;
-    border-color: cornflowerblue;
-    margin-bottom: 10px;
+    height: auto;
+    /* border-bottom: 1px solid; */
+    /* border-color: cornflowerblue; */
+    /* margin-bottom: 10px; */
     text-align:center;
     padding: 5px;
-    overflow-y: auto;
+    margin-bottom: 20px;
 }
 .jobs-list ul {
     margin: 0;
@@ -100,3 +99,58 @@ ul.topnav li.right {
     margin-bottom: 20px;
     
 }
+
+
+.thumbnail{
+
+    height: 100px;
+    margin: 10px;    
+}
+
+#myImg {
+    display: flex;
+    flex-direction: row;
+    overflow: auto;
+    width: 100%;
+    padding-top: 14px;
+    padding-bottom: 10px;
+}
+
+
+#upload_prev {
+	border:thin solid #000;
+	width: 65%;
+    padding:0.5em 1em 1.5em 1em;
+    overflow: auto;
+    height: 15%;
+}
+
+#upload_prev span {
+    display: flex;
+	padding: 0 5px;
+    font-size:12px;    
+}
+
+p.close {
+    margin: 0 5px 0 5px;
+    cursor: pointer;
+	padding-bottom:0;
+}
+
+#container {
+    width: 80%;
+    /*border-radius: 25px;*/
+    border: 2px solid Black;
+    padding: 15px 15px 15px 15px;
+    margin: 20px 20px 20px 20px;
+    background: #A4D3EE;
+    overflow: visible;
+    box-shadow: 5px 5px 2px #888888;
+    position: relative;
+  }
+  
+  #x {
+      position: absolute;
+      background: red;
+      color: white;
+  }
